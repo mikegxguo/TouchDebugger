@@ -16,7 +16,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := touch_debugger
+LOCAL_MODULE    := libtouch_debugger
 LOCAL_SRC_FILES := touch_debugger.c
 
 LOCAL_LDLIBS := -llog

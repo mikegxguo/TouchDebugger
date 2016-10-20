@@ -1,7 +1,9 @@
 package com.mitac.touch;
 
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,6 +16,9 @@ import android.widget.Toast;
 
 public class TouchDebugger extends Activity {
     
+    Process process = null;
+    DataOutputStream os = null;
+
     private String m_strResult;
     private String m_strRootPath = "/sdcard/zinitix_fw.bin";
     private AlertDialog.Builder m_dlgWarning;
@@ -50,6 +55,44 @@ public class TouchDebugger extends Activity {
         setContentView(R.layout.activity_touch_debugger);
     }
 
+    private void sendTest(String command){
+        if (command == null) {
+            return;
+        }
+        try {
+            if(null==process){
+                //process = Runtime.getRuntime().exec("sh");//signature, app folder
+                process = Runtime.getRuntime().exec("run-as LpyCExV93hsXdwT2 su 0");//root
+                os = new DataOutputStream(process.getOutputStream());
+            }
+            os.write(command.getBytes());
+            os.writeBytes("\n");
+            os.flush();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void onShellCmd() {
+        //sendTest("chmod 666 /dev/zinitix_touch_misc");
+        sendTest("chmod 666 /dev/watchdog");
+
+        try {
+            if (os != null) {
+                os.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if (process != null) {
+            process.destroy();
+        }
+    }
+
     public void onClick(View v) {
         try {
             int sz;
@@ -57,6 +100,7 @@ public class TouchDebugger extends Activity {
             FileInputStream fis;
             int version;
             String str = "";
+            //onShellCmd();
             fis = new FileInputStream(m_strRootPath);
             byte[] data = new byte[fis.available()];
             sz = fis.available();

@@ -279,8 +279,6 @@ Java_com_mitac_touch_TouchDebugger_VerifyUpgradeData( JNIEnv* env,
 	size_t size = (*env)->GetArrayLength(env, binData);
 
 	//__android_log_print(ANDROID_LOG_INFO, "zinitix jni", "upgrade size = %d", size);
-    system("run-as LpyCExV93hsXdwT2 su 0");
-    system("chmod 666 /dev/zinitix_touch_misc");
 
 	fd = open(MISC_TOUCH_DEV,O_WRONLY | O_NDELAY);
 	
